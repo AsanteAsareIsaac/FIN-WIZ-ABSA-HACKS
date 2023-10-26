@@ -1,12 +1,11 @@
-const hre = require("hardhat");
-
 async function main() {
-    // Deploy the FinWiz contract
-    const contract = await hre.ethers.getContractFactory("FinWiz");
-    const finWiz = await contract.deploy();
+    const [deployer] = await ethers.getSigners();
 
-    // Log the FinWiz contract address
-    console.log("FinWiz deployed to:", finWiz.address);
+    console.log("Deploying contracts with the account:", deployer.address);
+
+    const app = await ethers.deployContract("FinWiz");
+
+    console.log("App address:", await app.getAddress());
 }
 
 main()
