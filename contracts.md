@@ -1,0 +1,5 @@
+- DataCollection
+- UserManagement
+- DataReporting
+- CreditScoring
+- AccessManagement
