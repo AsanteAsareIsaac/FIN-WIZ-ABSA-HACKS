@@ -3,17 +3,19 @@ const { ethers } = require("hardhat");
 
 describe("FinWiz", () => {
     let finWiz;
+    let userAccount;
 
     before(async () => {
         const FinWiz = await ethers.getContractFactory("FinWiz");
         finWiz = await FinWiz.deploy();
         // await finWiz.deployed();
+        const [user] = await ethers.getSigners();
+        userAccount = user;
     });
 
     describe("collectData", () => {
         it("should collect data", async () => {
-            const userAccount = await ethers.getSigner(0);
-            const location = "Location";
+            const location = "Accra, Ghana";
             const date = "2023-01-01";
             const sales = 1000;
             const expenses = 500;
@@ -30,7 +32,6 @@ describe("FinWiz", () => {
 
     describe("createReport", () => {
         it("should create a report", async () => {
-            const userAccount = await ethers.getSigner(0);
             const date = "2023-01-02";
             const sales = 1500;
             const expenses = 600;
@@ -45,13 +46,27 @@ describe("FinWiz", () => {
     });
 
     describe("calculateCreditScore", () => {
-        it("should calculate a credit score", async () => {
-            const userAccount = await ethers.getSigner(0);
+        it("should calculate user's credit score using global bank standards", async () => {
 
-            await finWiz.calculateCreditScore();
+            // Get credit score
+            const creditScore = await finWiz.calculateCreditScore();
 
-            const userCreditScore = await finWiz.userCreditScores(userAccount.address);
-            expect(userCreditScore.score).to.be.greaterThan(0);
+            // Get user's credit score
+            const userCreditScore = await finWiz.userCreditScores(
+                userAccount.address
+            );
+
+            // Log results
+            console.log(`creditScore: ${creditScore}`);
+            console.log(`userCreditScore: ${userCreditScore.score}`);
+
+            // Test results
+            expect(userCreditScore.score).to.be.a("number");
+            expect(creditScore).to.be.greaterThan(300);
+            expect(creditScore).to.be.lessThan(850);
+
+            return calculateCreditScore;
         });
     });
+
 });
